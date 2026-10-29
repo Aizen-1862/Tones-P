@@ -1,0 +1,9 @@
+{
+  "appId": "com.aizen.tonesp",
+  "appName": "Tones:P",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  }
+}
