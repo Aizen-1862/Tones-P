@@ -158,14 +158,16 @@
   function renderCatalogue(tracks) {
     const grid=$("catalogueGrid"); grid.replaceChildren();
     tracks.forEach(track => {
-      const card=document.createElement("button"); card.type="button"; card.className="catalogue-card"; card.setAttribute("aria-label","Play "+track.title+" by "+track.artist);
+      const card=document.createElement("article"); card.className="catalogue-card";
       if(track.artworkUrl){const img=document.createElement("img");img.className="catalogue-art";img.src=track.artworkUrl;img.alt="";img.loading="lazy";img.referrerPolicy="no-referrer";img.onerror=()=>img.replaceWith(makeArtworkPlaceholder());card.append(img);}else card.append(makeArtworkPlaceholder());
       const title=document.createElement("span");title.className="catalogue-track-title";title.textContent=track.title||"Untitled track";
       const artist=document.createElement("span");artist.className="catalogue-track-artist";artist.textContent=track.artist||"Independent artist";
-      const license=document.createElement("a");license.className="catalogue-license";license.textContent="View licence ↗";license.href=track.licenseUrl||track.providerUrl||"#";license.target="_blank";license.rel="noopener noreferrer";license.addEventListener("click",e=>e.stopPropagation());
-      card.append(title,artist,license);card.addEventListener("click",()=>{setTrack(track);audio.play().then(async()=>{await setupAnalyser();if(state.audioContext?.state==="suspended")await state.audioContext.resume();state.playing=true;$("playButton").textContent="Ⅱ";setStatus();}).catch(()=>setCatalogueStatus("Track selected. Tap Play if playback did not start automatically."));});grid.append(card);
+      const play=document.createElement("button");play.type="button";play.className="catalogue-play";play.textContent="▶ Play track";play.addEventListener("click",()=>{setTrack(track);audio.play().then(async()=>{await setupAnalyser();if(state.audioContext?.state==="suspended")await state.audioContext.resume();state.playing=true;$("playButton").textContent="Ⅱ";setStatus();}).catch(()=>setCatalogueStatus("Track selected. Tap Play if playback did not start automatically."));});
+      const license=document.createElement("a");license.className="catalogue-license";license.textContent="View licence ↗";license.href=track.licenseUrl||track.providerUrl||"#";license.target="_blank";license.rel="noopener noreferrer";
+      card.append(title,artist,play,license);grid.append(card);
     });
   }
+  function makeArtworkPlaceholder() { const el=document.createElement("span");el.className="catalogue-art catalogue-art-placeholder";el.setAttribute("aria-hidden","true");el.textContent="♪";return el; }
   async function searchCatalogue(query) {
     const base=(window.LYRIC_MOTION_CONFIG?.API_BASE_URL||"").replace(/\/$/,"");
     if(!base || (/^http:\/\/localhost(?::\d+)?$/i.test(base) && location.protocol==="https:")){setCatalogueStatus("The catalogue API is not connected to this website yet. Connect the Tones:P backend and add a Jamendo client ID to enable online search.",true);return;}
