@@ -1,0 +1,32 @@
+name: Validate Tones:P
+on:
+  push:
+    branches: [tones-p-discovery-redesign]
+    paths:
+      - 'app.js'
+      - 'backend/server.js'
+      - 'index.html'
+      - 'style.css'
+      - '.github/workflows/validate-tonesp.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate JavaScript syntax
+        run: |
+          node --check app.js
+          node --check backend/server.js
+      - name: Check required discovery elements
+        run: |
+          grep -q 'id="catalogueSearchForm"' index.html
+          grep -q 'id="catalogueGrid"' index.html
+          grep -q 'JAMENDO_CLIENT_ID' backend/server.js
