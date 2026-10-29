@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090812">
+  <meta name="description" content="Lyric Motion — a music player where lyrics become a visual performance.">
+  <title>Lyric Motion — Feel every word</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Lyric Motion home"><span class="brand-mark">♪</span><span>lyric<span class="brand-accent">motion</span></span></a>
+    <div class="top-actions">
+      <span class="status-dot"></span><span class="status-label">Adaptive player</span>
+      <button class="icon-button" id="uploadTrigger" title="Load local audio" aria-label="Load local audio">＋</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="welcome-row">
+      <div>
+        <p class="eyebrow">YOUR MUSIC, REIMAGINED</p>
+        <h1>Feel every <span>word.</span></h1>
+        <p class="subheading">Lyrics that move with the music, colours that follow the feeling.</p>
+      </div>
+      <div class="mood-chip"><span class="pulse-dot"></span><span id="moodLabel">Waiting for a song</span></div>
+    </section>
+
+    <section class="stage" id="stage">
+      <canvas id="visualCanvas" aria-hidden="true"></canvas>
+      <div class="stage-vignette"></div>
+      <div class="stage-topline"><span class="live-pill"><i></i> LYRIC MOTION</span><span id="styleName">AUTO VISUALS</span></div>
+      <div class="lyric-scene" id="lyricScene">
+        <p class="lyric-kicker" id="lyricKicker">YOUR NEXT SONG, A NEW WORLD</p>
+        <div class="lyric-lines" id="lyricLines">
+          <div class="placeholder-title">Drop a track.<br><em>Watch it come alive.</em></div>
+          <p class="placeholder-hint">Load an audio file and optional timed lyrics to try the experience.</p>
+        </div>
+      </div>
+      <div class="stage-bottomline"><span id="audioStatus">No track loaded</span><span class="visualizer-mini" id="miniVisualizer" aria-hidden="true"></span></div>
+    </section>
+
+    <section class="player-card">
+      <div class="track-info">
+        <div class="artwork" id="artwork"><span>♪</span></div>
+        <div class="track-copy"><h2 id="trackTitle">Choose your first track</h2><p id="trackArtist">Local audio or authorized catalogue</p></div>
+        <button class="heart-button" id="favoriteButton" title="Favorite track" aria-label="Favorite track">♡</button>
+      </div>
+      <div class="transport">
+        <div class="transport-buttons">
+          <button class="transport-button" id="restartButton" title="Restart">↺</button>
+          <button class="play-button" id="playButton" aria-label="Play" title="Play">▶</button>
+          <button class="transport-button" id="stopButton" title="Stop">■</button>
+        </div>
+        <div class="timeline">
+          <span id="currentTime">0:00</span>
+          <input type="range" id="seekBar" min="0" max="1000" value="0" aria-label="Seek through track">
+          <span id="duration">0:00</span>
+        </div>
+        <div class="volume-row"><span>VOLUME</span><input type="range" id="volumeBar" min="0" max="1" step="0.01" value="0.8" aria-label="Volume"></div>
+      </div>
+      <audio id="audio" crossorigin="anonymous"></audio>
+    </section>
+
+    <section class="control-row">
+      <div class="section-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h2>Visual direction</h2></div><span class="auto-badge"><span>✦</span> AUTO MODE</span></div>
+      <div class="mood-options" role="group" aria-label="Visual mood">
+        <button class="mood-option active" data-mood="auto"><span class="mood-icon auto-icon">✧</span><span>Automatic</span></button>
+        <button class="mood-option" data-mood="playful"><span class="mood-icon playful-icon">✿</span><span>Playful</span></button>
+        <button class="mood-option" data-mood="emotional"><span class="mood-icon emotional-icon">☾</span><span>Emotional</span></button>
+        <button class="mood-option" data-mood="hype"><span class="mood-icon hype-icon">✹</span><span>Hype</span></button>
+        <button class="mood-option" data-mood="dreamy"><span class="mood-icon dreamy-icon">✧</span><span>Dreamy</span></button>
+      </div>
+      <p class="helper-copy">Automatic mode chooses a visual recipe from track metadata and live audio energy. You can preview the moods manually.</p>
+    </section>
+
+    <section class="library-section">
+      <div class="section-heading"><div><p class="eyebrow">YOUR SOUND</p><h2>Play something</h2></div><button class="text-button" id="browseButton">Load local files ↗</button></div>
+      <div class="library-grid" id="libraryGrid">
+        <button class="upload-card" id="uploadCard"><span class="upload-plus">＋</span><strong>Open an audio file</strong><span>MP3, WAV, OGG, M4A (browser support varies)</span></button>
+        <button class="upload-card secondary-upload" id="lyricsCard"><span class="upload-plus">≋</span><strong>Add timed lyrics</strong><span>Load an .lrc file or paste timestamps</span></button>
+      </div>
+    </section>
+    <input type="file" id="audioFile" accept="audio/*" hidden>
+    <input type="file" id="lyricsFile" accept=".lrc,.txt,text/plain" hidden>
+    <input type="file" id="artFile" accept="image/*" hidden>
+    <section class="lrc-panel" id="lrcPanel" hidden>
+      <div class="section-heading"><div><p class="eyebrow">TIMED LYRICS</p><h2>Lyrics source</h2></div><button class="text-button" id="closeLyrics">Close ×</button></div>
+      <p class="helper-copy">Paste lyrics you have permission to use. Use LRC timestamps for synchronization.</p>
+      <textarea id="lyricsInput" rows="6" placeholder="[00:01.00]First line&#10;[00:04.20]Second line"></textarea>
+      <div class="lrc-actions"><button class="secondary-button" id="loadLyricsFile">Choose .lrc file</button><button class="primary-button" id="applyLyrics">Apply lyrics</button></div>
+    </section>
+    <footer><span>LYRIC MOTION <b>·</b> FEEL EVERY WORD</span><span>Prototype · Use audio and lyrics you have rights to</span></footer>
+  </main>
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
