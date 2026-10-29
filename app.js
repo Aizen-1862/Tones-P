@@ -151,6 +151,29 @@
     }
     requestAnimationFrame(animate);
   }
+  function setCatalogueStatus(message, isError=false) {
+    const el = $("catalogueStatus"); if (!el) return; el.textContent = message; el.classList.toggle("is-error", isError);
+  }
+  function makeArtworkPlaceholder() { const el=document.createElement("span"); el.className="catalogue-art catalogue-art-placeholder"; el.setAttribute("aria-hidden","true"); el.textContent="♪"; return el; }
+  function renderCatalogue(tracks) {
+    const grid=$("catalogueGrid"); grid.replaceChildren();
+    tracks.forEach(track => {
+      const card=document.createElement("button"); card.type="button"; card.className="catalogue-card"; card.setAttribute("aria-label","Play "+track.title+" by "+track.artist);
+      if(track.artworkUrl){const img=document.createElement("img");img.className="catalogue-art";img.src=track.artworkUrl;img.alt="";img.loading="lazy";img.referrerPolicy="no-referrer";img.onerror=()=>img.replaceWith(makeArtworkPlaceholder());card.append(img);}else card.append(makeArtworkPlaceholder());
+      const title=document.createElement("span");title.className="catalogue-track-title";title.textContent=track.title||"Untitled track";
+      const artist=document.createElement("span");artist.className="catalogue-track-artist";artist.textContent=track.artist||"Independent artist";
+      const license=document.createElement("a");license.className="catalogue-license";license.textContent="View licence ↗";license.href=track.licenseUrl||track.providerUrl||"#";license.target="_blank";license.rel="noopener noreferrer";license.addEventListener("click",e=>e.stopPropagation());
+      card.append(title,artist,license);card.addEventListener("click",()=>{setTrack(track);audio.play().then(async()=>{await setupAnalyser();if(state.audioContext?.state==="suspended")await state.audioContext.resume();state.playing=true;$("playButton").textContent="Ⅱ";setStatus();}).catch(()=>setCatalogueStatus("Track selected. Tap Play if playback did not start automatically."));});grid.append(card);
+    });
+  }
+  async function searchCatalogue(query) {
+    const base=(window.LYRIC_MOTION_CONFIG?.API_BASE_URL||"").replace(/\/$/,"");
+    if(!base || (/^http:\/\/localhost(?::\d+)?$/i.test(base) && location.protocol==="https:")){setCatalogueStatus("The catalogue API is not connected to this website yet. Connect the Tones:P backend and add a Jamendo client ID to enable online search.",true);return;}
+    const button=$("catalogueSearchButton");button.disabled=true;setCatalogueStatus("Searching independent music…");
+    try {const response=await fetch(base+"/api/catalog/search?q="+encodeURIComponent(query),{headers:{Accept:"application/json"}});const payload=await response.json().catch(()=>({}));if(!response.ok)throw new Error(payload.error||"Music search is temporarily unavailable.");const tracks=Array.isArray(payload.tracks)?payload.tracks:[];renderCatalogue(tracks);setCatalogueStatus(tracks.length?"Found "+tracks.length+" tracks. Select one to play.":"No playable tracks found. Try another artist or mood.");}
+    catch(error){setCatalogueStatus(error.message||"Could not reach the music catalogue. Local audio playback still works.",true);}finally{button.disabled=false;}
+  }
+  $("catalogueSearchForm").addEventListener("submit",event=>{event.preventDefault();const query=$("catalogueQuery").value.trim();if(!query){setCatalogueStatus("Enter an artist, track, or mood to search.");$("catalogueQuery").focus();return;}searchCatalogue(query);});
   function setStatus() { $("audioStatus").textContent=state.playing?"Now playing":audio.src?"Ready to play":"No track loaded"; }
   $("uploadTrigger").addEventListener("click",()=>$("audioFile").click());
   $("browseButton").addEventListener("click",()=>$("audioFile").click());
