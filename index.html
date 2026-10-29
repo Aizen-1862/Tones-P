@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090812">
-  <meta name="description" content="Lyric Motion — a music player where lyrics become a visual performance.">
-  <title>Lyric Motion — Feel every word</title>
+  <meta name="description" content="Tones:P — discover independent music and experience adaptive synced lyrics.">
+  <title>Tones:P — music, in motion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Lyric Motion home"><span class="brand-mark">♪</span><span>lyric<span class="brand-accent">motion</span></span></a>
+    <a class="brand" href="#" aria-label="Tones:P home"><span class="brand-mark">♪</span><span>Tones<span class="brand-accent">:P</span></span></a>
     <div class="top-actions">
       <span class="status-dot"></span><span class="status-label">Adaptive player</span>
       <button class="icon-button" id="uploadTrigger" title="Load local audio" aria-label="Load local audio">＋</button>
@@ -24,9 +24,9 @@
   <main class="app-shell">
     <section class="welcome-row">
       <div>
-        <p class="eyebrow">YOUR MUSIC, REIMAGINED</p>
-        <h1>Feel every <span>word.</span></h1>
-        <p class="subheading">Lyrics that move with the music, colours that follow the feeling.</p>
+        <p class="eyebrow">A LITTLE MORE FEELING</p>
+        <h1>Find your <span>frequency.</span></h1>
+        <p class="subheading">Discover independent sounds. Let every lyric find its own motion.</p>
       </div>
       <div class="mood-chip"><span class="pulse-dot"></span><span id="moodLabel">Waiting for a song</span></div>
     </section>
@@ -34,7 +34,7 @@
     <section class="stage" id="stage">
       <canvas id="visualCanvas" aria-hidden="true"></canvas>
       <div class="stage-vignette"></div>
-      <div class="stage-topline"><span class="live-pill"><i></i> LYRIC MOTION</span><span id="styleName">AUTO VISUALS</span></div>
+      <div class="stage-topline"><span class="live-pill"><i></i> TONES:P SESSION</span><span id="styleName">AUTO VISUALS</span></div>
       <div class="lyric-scene" id="lyricScene">
         <p class="lyric-kicker" id="lyricKicker">YOUR NEXT SONG, A NEW WORLD</p>
         <div class="lyric-lines" id="lyricLines">
@@ -67,6 +67,13 @@
       <audio id="audio" crossorigin="anonymous"></audio>
     </section>
 
+    <section class="discovery-section" aria-labelledby="discoveryTitle">
+      <div class="section-heading discovery-heading"><div><p class="eyebrow">DISCOVER SOMETHING NEW</p><h2 id="discoveryTitle">Made for your next favourite</h2></div><span class="catalogue-note">Independent music · Jamendo</span></div>
+      <form class="search-bar" id="catalogueSearchForm"><span class="search-symbol" aria-hidden="true">⌕</span><input id="catalogueQuery" type="search" placeholder="Search artists, tracks, or moods" aria-label="Search music" maxlength="100" autocomplete="off"><button class="primary-button" id="catalogueSearchButton" type="submit">Search</button></form>
+      <p class="catalogue-status" id="catalogueStatus" role="status" aria-live="polite">Online discovery needs the Tones:P API connection and a Jamendo developer client ID.</p>
+      <div class="catalogue-grid" id="catalogueGrid"></div>
+      <p class="catalogue-footnote">Independent tracks are provided through Jamendo. Playback and reuse depend on each track’s listed licence. Tones:P does not host the music.</p>
+    </section>
     <section class="control-row">
       <div class="section-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h2>Visual direction</h2></div><span class="auto-badge"><span>✦</span> AUTO MODE</span></div>
       <div class="mood-options" role="group" aria-label="Visual mood">
@@ -80,7 +87,7 @@
     </section>
 
     <section class="library-section">
-      <div class="section-heading"><div><p class="eyebrow">YOUR SOUND</p><h2>Play something</h2></div><button class="text-button" id="browseButton">Load local files ↗</button></div>
+      <div class="section-heading"><div><p class="eyebrow">YOUR SOUND</p><h2>Start listening</h2></div><button class="text-button" id="browseButton">Load local files ↗</button></div>
       <div class="library-grid" id="libraryGrid">
         <button class="upload-card" id="uploadCard"><span class="upload-plus">＋</span><strong>Open an audio file</strong><span>MP3, WAV, OGG, M4A (browser support varies)</span></button>
         <button class="upload-card secondary-upload" id="lyricsCard"><span class="upload-plus">≋</span><strong>Add timed lyrics</strong><span>Load an .lrc file or paste timestamps</span></button>
@@ -95,7 +102,7 @@
       <textarea id="lyricsInput" rows="6" placeholder="[00:01.00]First line&#10;[00:04.20]Second line"></textarea>
       <div class="lrc-actions"><button class="secondary-button" id="loadLyricsFile">Choose .lrc file</button><button class="primary-button" id="applyLyrics">Apply lyrics</button></div>
     </section>
-    <footer><span>LYRIC MOTION <b>·</b> FEEL EVERY WORD</span><span>Prototype · Use audio and lyrics you have rights to</span></footer>
+    <footer><span>TONES:P <b>·</b> MUSIC, IN MOTION</span><span>Independent discovery · Respect each track’s licence</span></footer>
   </main>
   <script src="./config.js"></script>
   <script src="./app.js"></script>
