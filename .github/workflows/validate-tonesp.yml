@@ -29,4 +29,4 @@ jobs:
         run: |
           grep -q 'id="catalogueSearchForm"' index.html
           grep -q 'id="catalogueGrid"' index.html
-          grep -q 'JAMENDO_CLIENT_ID' backend/server.js
+          grep -q 'AUDIUS_API_BASE' backend/server.js
