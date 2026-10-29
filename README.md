@@ -1,84 +1,41 @@
-# Lyric Motion — Adaptive Music Player (Starter MVP)
+# Tones:P — adaptive music player
 
-A phone-friendly music player prototype where the visual language changes with the song's mood and energy.
+Tones:P is a phone-friendly music player prototype with a minimal, album-art-focused discovery direction and adaptive synchronized lyrics.
 
-## What works in this starter
-- Responsive music player UI.
-- Play/pause, seek, volume, and elapsed/total time.
-- Upload a local audio file to play it in the browser.
-- Upload an `.lrc` timed-lyrics file, or paste timed LRC text.
-- Line-synchronized lyrics, with word-by-word visual emphasis as a visual approximation.
-- Song mood selector (Automatic / Playful / Emotional / Hype / Dreamy).
-- Audio-reactive background effects using the Web Audio API.
-- A backend API with health check, sample-track configuration, and style-recipe endpoint.
-- No API keys required for the local-upload demo.
+## Implemented in this branch
+- Responsive player with play/pause, seek, volume, and elapsed/total time.
+- Local audio file playback; local files are not uploaded.
+- Load or paste timed `.lrc` lyrics.
+- Automatic / Playful / Emotional / Hype / Dreamy visual moods.
+- Audio-reactive background effects.
+- Backend health check, local catalogue endpoint, style recipes, and a Jamendo-backed online music search endpoint.
+- Online results include the provider's licence link. Tones:P does not host the audio.
 
-## Important MVP limitations
-- This starter does **not** scrape commercial music or lyrics.
-- Audio uploads are played locally in the browser and are not uploaded to a server.
-- LRC files normally provide line-level timestamps, not exact word timestamps. The word animation is an approximate visual effect until genuine word-level timestamps are available.
-- The included catalogue is intentionally empty: add tracks only when you have a legal audio URL and the rights to stream it. An API catalogue listing does not automatically grant playback or lyric rights.
-- AI visual selection is represented by a deterministic automatic style engine for now, so the site works without a paid AI key. A server-side AI provider can be added later.
+## Online discovery setup
+Online search remains disabled until the backend URL and provider client ID are configured.
 
-## Folder structure
-- `frontend/` — deployable static site (GitHub Pages)
-- `backend/` — Node.js/Express API (Render or local)
-- `render.yaml` — Render Blueprint starter
-- `.gitignore`
+1. Register an application on the Jamendo developer portal: https://devportal.jamendo.com/
+2. Add `JAMENDO_CLIENT_ID` to the backend service's environment variables in Render. Keep private credentials on the backend, never in frontend files.
+3. Deploy the backend from the `backend` directory with build command `npm install` and start command `npm start`.
+4. Check `/api/health` on the deployed backend.
+5. Set `API_BASE_URL` in `config.js` to the actual deployed backend URL, without a trailing slash.
+6. Test `/api/catalog/search?q=jazz` on the backend, then try the search UI.
+
+Jamendo's published API terms state that the API is available for non-commercial use by default. Review the current terms and each track's Creative Commons licence before sharing or publishing the app. The app filters out results without an HTTPS audio URL and a licence URL; this is not a substitute for checking licence conditions.
+
+## Current limitations
+- This is not yet a finished streaming service or Android app.
+- The online catalogue depends on provider API availability and valid credentials.
+- LRC files usually provide line-level timestamps, so word animation is only an approximate visual effect.
+- The starter does not scrape commercial music or lyrics.
 
 ## Run locally
 Requires Node.js 18+.
-
 1. Open a terminal in `backend/`.
-2. Run `npm install`
-3. Run `npm start`
-4. Open `frontend/index.html` in a browser, or serve `frontend/` with a static server.
-5. For local backend use, the frontend auto-defaults to `http://localhost:3000`.
-
-If opening `index.html` directly, some browsers restrict network calls. A simple static server is recommended.
-
-## Deploy frontend to GitHub Pages
-1. Create a new GitHub repository, e.g. `lyric-motion`.
-2. Upload the contents of this ZIP, keeping the `frontend` and `backend` folders.
-3. In GitHub, open **Settings → Pages**.
-4. Set the source to **Deploy from a branch**, choose `main`, and choose `/frontend` only if GitHub Pages offers that folder option. Otherwise, move/copy the contents of `frontend/` to the repository root or use GitHub Actions.
-5. Set `API_BASE_URL` in `frontend/config.js` to your deployed backend URL (for example `https://your-service.onrender.com`). Do not include a trailing slash.
-6. Commit the change. GitHub Pages will publish the site.
-
-## Deploy backend to Render
-1. Create a new **Web Service** in Render and connect the repository.
-2. Set **Root Directory** to `backend`.
-3. Build command: `npm install`
-4. Start command: `npm start`
-5. Render provides `PORT`; the server binds to `0.0.0.0`.
-6. Copy the Render URL into `frontend/config.js` as `API_BASE_URL`.
-7. Redeploy the frontend after committing the config change.
-
-A free hosting tier can sleep or have usage limits. Availability and free-tier terms can change.
-
-## Adding an authorized catalogue
-Edit `backend/data/tracks.json`. Every track should include:
-- `id`, `title`, `artist`
-- `audioUrl` — direct audio URL that the provider permits your app to play
-- `artworkUrl` — optional image URL
-- `mood` — optional hint: `playful`, `emotional`, `hype`, `dreamy`
-- `lyrics` — optional LRC string only when you have permission to display it
-
-Example:
-```json
-[
-  {
-    "id": "licensed-track-1",
-    "title": "Example track",
-    "artist": "Artist name",
-    "audioUrl": "https://example.com/authorized-audio.mp3",
-    "artworkUrl": "",
-    "mood": "playful",
-    "lyrics": "[00:01.00]Example line goes here"
-  }
-]
-```
-Use real URLs only when you have permission. Do not add copyrighted lyrics unless your license allows it.
+2. Run `npm install`.
+3. Set `JAMENDO_CLIENT_ID` in your environment to enable online search.
+4. Run `npm start`.
+5. Serve the frontend through a local static server and set `API_BASE_URL` in `config.js` to `http://localhost:3000`.
 
 ## LRC format
 ```text
@@ -87,7 +44,10 @@ Use real URLs only when you have permission. Do not add copyrighted lyrics unles
 [00:08.00]Third lyric line
 ```
 
-## Security
-- Never place private API keys in `frontend/`.
-- This starter does not require API keys.
-- If you later add an AI provider, call it from the backend and keep credentials in Render environment variables.
+## Branches
+- `main`: existing live website; intentionally untouched by this redesign.
+- `tones-p-discovery-redesign`: Tones:P rebrand, discovery UI, and Jamendo backend integration.
+- `android-app-starter`: separate Android wrapper experiment, postponed until the product is ready.
+
+## Rights and attribution
+Only use audio and lyrics when their licence permits the intended use. Jamendo tracks may have different Creative Commons conditions, including attribution and non-commercial restrictions. Do not add copyrighted lyrics unless you have permission to display them.
