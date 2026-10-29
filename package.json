@@ -1,0 +1,17 @@
+{
+  "name": "tonesp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tones:P Android app wrapper",
+  "scripts": {
+    "build:web": "mkdir -p www && cp index.html style.css app.js config.js www/",
+    "android:sync": "npm run build:web && cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}
